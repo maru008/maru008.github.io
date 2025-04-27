@@ -56,3 +56,12 @@ footer {
   color: red;
   font-weight: bold;
 }
+
+#links-list img {
+  transition: transform 0.2s;
+}
+
+#links-list img:hover {
+  transform: scale(1.2);
+}
+

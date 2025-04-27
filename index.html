@@ -1,32 +1,50 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Naoki Yoshimaru Homepage</title>
+  <title>Naoki Yoshimaru Profile</title>
   <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Naoki Yoshimaru</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="publications.html">Publications</a></li>
-      </ul>
-    </nav>
-  </header>
 
-  <main>
-    <section>
-      <h2>Welcome</h2>
-      <p>This is the homepage of Naoki Yoshimaru. Here you can find information about research activities and publications.</p>
-    </section>
-  </main>
+<header>
+  <h1>Naoki Yoshimaru</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="publications.html">Publications</a></li>
+    </ul>
+  </nav>
+</header>
 
-  <footer>
-    <p>&copy; 2025 Naoki Yoshimaru</p>
-  </footer>
+<main>
+  <section>
+    <h2>所属</h2>
+    <ul id="affiliation-list"></ul>
+
+    <h2>学歴</h2>
+    <ul id="education-list"></ul>
+
+    <h2>連絡先</h2>
+    <ul id="contact-list"></ul>
+
+    <h2>外部リンク</h2>
+    <div id="links-list" style="margin-bottom: 20px;"></div>    
+
+    <h2>経歴</h2>
+    <ul id="career-list"></ul>
+
+    <h2>社会活動</h2>
+    <ul id="society-list"></ul>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 Naoki Yoshimaru</p>
+</footer>
+
+<script src="assets/js/profile.js"></script>
+
 </body>
 </html>

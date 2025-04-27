@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const publicationList = document.getElementById('publication-list');
   
         const categoryMap = {
-          1: "Journal Papers, Letters, and Surveys",
-          2: "International Conference/Workshop Papers and Posters",
+          1: "Journal Papers",
+          2: "International Conference Papers",
           3: "Discourses and Panels",
-          4: "Domestic Conference/Workshop Papers and Posters",
+          4: "Domestic Conference Papers",
           5: "Patents",
           6: "Ph.D. Thesis",
           7: "Master's Thesis",
