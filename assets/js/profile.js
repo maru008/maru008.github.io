@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
       "GitHub": "https://github.githubassets.com/favicons/favicon.png",
       "Twitter": "https://about.x.com/content/dam/about-twitter/x/brand-toolkit/logo-black.png.twimg.1920.png",
       "LinkedIn": "https://static.licdn.com/scds/common/u/images/logos/favicons/v1/favicon.ico",
-      "Google Scholar": "https://scholar.google.com/favicon.ico"
+      "Google Scholar": "https://scholar.google.com/favicon.ico",
+      "HatenaBlog": "https://cdn.blog.st-hatena.com/images/favicons/blog.ico"
     };
   
     links.forEach((link, idx) => {
