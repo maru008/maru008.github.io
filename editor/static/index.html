@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>researchmap業績管理</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">Naoki Yoshimaru Portfolio</p>
+      <h1>researchmap業績管理</h1>
+      <p>researchmap JSONLを正本として、新規作成・編集します。</p>
+    </div>
+    <button id="home-button" class="secondary-button" type="button" hidden>最初の画面へ戻る</button>
+  </header>
+
+  <main>
+    <section id="home-screen">
+      <div id="load-status" class="status" role="status">データを読み込んでいます…</div>
+      <div class="mode-grid">
+        <button class="mode-card" data-mode="add" type="button" disabled>
+          <span class="mode-symbol">＋</span>
+          <strong>新しい業績を作成</strong>
+          <span>論文または講演・口頭発表を追加します。</span>
+        </button>
+        <button class="mode-card" data-mode="edit" type="button" disabled>
+          <span class="mode-symbol">✎</span>
+          <strong>既存データを編集</strong>
+          <span>全researchmapデータから対象を検索します。</span>
+        </button>
+      </div>
+      <section class="export-panel">
+        <div>
+          <h2>researchmapへ反映</h2>
+          <p>編集後のJSONLをダウンロードし、researchmapのインポート画面で手動登録します。</p>
+        </div>
+        <a class="primary-link" href="/api/export" download>インポート用JSONLをダウンロード</a>
+      </section>
+    </section>
+
+    <section id="add-picker" class="workspace" hidden>
+      <p class="step">新規作成</p>
+      <h2>追加する種類を選択</h2>
+      <div class="type-grid">
+        <button type="button" data-new-type="published_papers"><strong>論文</strong><span>査読・招待、掲載誌、DOIなど</span></button>
+        <button type="button" data-new-type="presentations"><strong>講演・口頭発表</strong><span>招待、発表形式、イベント名など</span></button>
+      </div>
+      <aside class="note">新規データにはresearchmapの業績IDを付けません。インポート後にresearchmapから再エクスポートすると正式IDが入ります。</aside>
+    </section>
+
+    <section id="edit-picker" class="workspace" hidden>
+      <p class="step">既存編集</p>
+      <h2>編集するデータを探す</h2>
+      <div class="filters">
+        <label>種類<select id="type-filter"><option value="">すべて</option></select></label>
+        <label>タイトル・著者で検索<input id="search-input" type="search" placeholder="例：栄養価、吉丸 直希"></label>
+      </div>
+      <p id="record-count"></p>
+      <div id="record-list" class="record-list"></div>
+    </section>
+
+    <section id="form-screen" class="workspace" hidden>
+      <p id="form-mode" class="step"></p>
+      <h2 id="form-heading"></h2>
+      <p id="form-description"></p>
+      <div id="save-status" class="status" role="status" hidden></div>
+
+      <form id="structured-form" hidden>
+        <fieldset>
+          <legend>基本情報</legend>
+          <div class="form-grid">
+            <label>主な言語 <b>必須</b><select name="language" required><option value="ja">日本語</option><option value="en">英語</option></select></label>
+            <label>公開設定 <b>必須</b><select name="display" required><option value="disclosed">公開</option><option value="closed">非公開</option><option value="researchers_only">研究者のみに公開</option></select></label>
+            <label class="full">タイトル（日本語）<textarea name="title_ja" rows="2"></textarea></label>
+            <label class="full">タイトル（英語）<textarea name="title_en" rows="2"></textarea></label>
+            <label class="full">著者・発表者（日本語、1行1名）<textarea name="contributors_ja" rows="4" placeholder="吉丸 直希&#10;波多野 賢治"></textarea></label>
+            <label class="full">著者・発表者（英語、1行1名）<textarea name="contributors_en" rows="4" placeholder="Naoki Yoshimaru&#10;Kenji Hatano"></textarea></label>
+            <label>発表・出版日 <b>必須</b><input name="publication_date" required placeholder="YYYY-MM または YYYY-MM-DD"></label>
+            <label class="check-label"><input name="major_achievement" type="checkbox">主要な業績</label>
+          </div>
+        </fieldset>
+
+        <fieldset id="paper-fields">
+          <legend>論文情報</legend>
+          <div class="form-grid three">
+            <label class="full">掲載誌・会議名（日本語）<textarea name="venue_ja" rows="2"></textarea></label>
+            <label class="full">掲載誌・会議名（英語）<textarea name="venue_en" rows="2"></textarea></label>
+            <label>掲載種別<select name="published_paper_type"><option value="">未設定</option><option value="scientific_journal">学術誌</option><option value="international_conference_proceedings">国際会議プロシーディングス</option><option value="symposium">シンポジウム・国内会議</option><option value="research_society">研究会</option><option value="master_thesis">修士論文</option><option value="doctoral_thesis">博士論文</option></select></label>
+            <label>査読<select name="referee"><option value="">未設定</option><option value="true">あり</option><option value="false">なし</option></select></label>
+            <label>招待<select name="invited"><option value="">未設定</option><option value="true">あり</option><option value="false">なし</option></select></label>
+            <label>巻<input name="volume"></label><label>号<input name="number"></label>
+            <label>開始ページ<input name="starting_page"></label><label>終了ページ<input name="ending_page"></label>
+            <label>出版社<input name="publisher"></label>
+            <label>DOI<input name="doi" placeholder="10.xxxx/xxxx"></label>
+          </div>
+        </fieldset>
+
+        <fieldset id="presentation-fields">
+          <legend>講演・口頭発表情報</legend>
+          <div class="form-grid">
+            <label class="full">イベント名（日本語）<textarea name="event_ja" rows="2"></textarea></label>
+            <label class="full">イベント名（英語）<textarea name="event_en" rows="2"></textarea></label>
+            <label>発表形式<select name="presentation_type"><option value="">未設定</option><option value="oral_presentation">口頭発表</option><option value="poster_presentation">ポスター発表</option><option value="invited_oral_presentation">招待講演</option><option value="nominated_symposium">指名シンポジウム</option><option value="public_symposium">公開シンポジウム</option></select></label>
+            <label>招待<select name="presentation_invited"><option value="">未設定</option><option value="true">あり</option><option value="false">なし</option></select></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>説明とリンク</legend>
+          <div class="form-grid">
+            <label class="full">説明（日本語）<textarea name="description_ja" rows="4"></textarea></label>
+            <label class="full">説明（英語）<textarea name="description_en" rows="4"></textarea></label>
+            <label class="full">関連URL（1行1件）<textarea name="urls" rows="3" placeholder="https://example.org/paper"></textarea></label>
+          </div>
+        </fieldset>
+        <div class="save-bar"><span>保存前に内容を検証し、元JSONLを自動バックアップします。</span><button type="submit">内容を確認する</button></div>
+      </form>
+
+      <form id="raw-form" hidden>
+        <aside class="note">この種類はJSON詳細編集です。<code>insert</code>（種別・ID）は変更せず、<code>merge</code>だけを編集します。</aside>
+        <label>merge JSON<textarea id="raw-json" rows="24" spellcheck="false"></textarea></label>
+        <div class="save-bar"><span>JSON構造を検証して保存します。</span><button type="submit">内容を確認する</button></div>
+      </form>
+    </section>
+  </main>
+
+  <dialog id="confirmation-dialog">
+    <h2>この内容をJSONLへ保存しますか？</h2>
+    <pre id="confirmation-json"></pre>
+    <div class="dialog-actions"><button id="cancel-save" class="secondary-button" type="button">戻る</button><button id="confirm-save" type="button">保存する</button></div>
+  </dialog>
+
+  <template id="record-template"><button class="record-card" type="button"><span class="record-meta"></span><strong class="record-title"></strong><span class="record-contributors"></span></button></template>
+  <script src="/app.js"></script>
+</body>
+</html>

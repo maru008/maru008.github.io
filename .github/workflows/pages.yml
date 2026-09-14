@@ -1,0 +1,46 @@
+name: Deploy portfolio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate editor and researchmap data
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Build public data
+        run: python3 scripts/build_public_data.py
+
+      - name: Assemble public site only
+        run: |
+          mkdir -p _site/data
+          cp index.html publications.html CNAME _site/
+          cp -R assets _site/assets
+          cp -R data/public _site/data/public
+          touch _site/.nojekyll
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
