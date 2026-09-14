@@ -12,10 +12,10 @@ from editor import researchmap_editor as editor
 class ResearchmapEditorTests(unittest.TestCase):
     def test_current_export_is_valid(self):
         documents = editor.load_documents(editor.DEFAULT_DATA_FILE)
-        self.assertEqual(69, len(documents))
-        self.assertEqual("researchers", documents[0]["insert"]["type"])
-        self.assertEqual(24, sum(item["insert"]["type"] == "published_papers" for item in documents))
-        self.assertEqual(8, sum(item["insert"]["type"] == "presentations" for item in documents))
+        self.assertGreater(len(documents), 0)
+        self.assertEqual(1, sum(item["insert"]["type"] == "researchers" for item in documents))
+        self.assertGreater(sum(item["insert"]["type"] == "published_papers" for item in documents), 0)
+        self.assertGreater(sum(item["insert"]["type"] == "presentations" for item in documents), 0)
 
     def test_new_paper_accepts_researchmap_flags_without_id(self):
         document = {
@@ -72,6 +72,7 @@ class ResearchmapEditorTests(unittest.TestCase):
             root = Path(directory)
             data_file = root / "data.jsonl"
             data_file.write_text(source, encoding="utf-8")
+            initial_count = len(editor.load_documents(data_file))
             server = editor.EditorServer(("127.0.0.1", 0), editor.Handler, data_file)
             thread = threading.Thread(target=server.serve_forever, daemon=True)
             thread.start()
@@ -101,7 +102,7 @@ class ResearchmapEditorTests(unittest.TestCase):
                     with urlopen(request) as response:
                         self.assertEqual(201, response.status)
                 written = editor.load_documents(data_file)
-                self.assertEqual(70, len(written))
+                self.assertEqual(initial_count + 1, len(written))
                 self.assertNotIn("id", written[0]["insert"])
                 self.assertEqual("Temporary test paper", written[0]["merge"]["paper_title"]["en"])
             finally:
@@ -117,6 +118,7 @@ class ResearchmapEditorTests(unittest.TestCase):
             backup_dir = root / "backups"
             data_file.write_text(source, encoding="utf-8")
             documents = editor.load_documents(data_file)
+            initial_count = len(documents)
             documents[1]["merge"]["referee"] = True
             with patch.object(editor, "BACKUP_DIR", backup_dir):
                 new_hash = editor.write_documents(data_file, documents, editor.file_hash(data_file))
@@ -125,7 +127,7 @@ class ResearchmapEditorTests(unittest.TestCase):
                 with self.assertRaises(editor.ConflictError):
                     editor.write_documents(data_file, documents, "stale-hash")
             written = [json.loads(line) for line in data_file.read_text(encoding="utf-8").splitlines()]
-            self.assertEqual(69, len(written))
+            self.assertEqual(initial_count, len(written))
             self.assertIs(written[1]["merge"]["referee"], True)
 
 

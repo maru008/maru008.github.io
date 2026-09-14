@@ -42,12 +42,54 @@ document.addEventListener("DOMContentLoaded", async () => {
       { label: "researchmap", url: `https://researchmap.jp/${researcher.permalink || "naokiyoshimaru"}` },
       ...(researcher.see_also || []).map((item) => ({ label: item.label || "関連リンク", url: item["@id"] })),
     ];
+    const resourceDetails = {
+      researchmap: {
+        title: "researchmap",
+        detail: rm.t("Research profile", "研究者プロフィール"),
+        icon: "assets/icons/researchmap.ico",
+      },
+      j_global: {
+        title: "J-GLOBAL",
+        detail: rm.t("Researcher database", "研究者情報データベース"),
+        icon: "assets/icons/j-global.ico",
+      },
+      orcid: {
+        title: "ORCID",
+        detail: "0009-0001-0385-594X",
+        icon: "assets/icons/orcid.svg",
+      },
+      url: {
+        title: rm.t("Lab Profile", "研究室プロフィール"),
+        detail: rm.t("Media Informatics Laboratory", "メディア情報学研究室"),
+        icon: "assets/icons/mil.png",
+      },
+    };
     resources.filter((item) => item.url && !seen.has(item.url) && seen.add(item.url)).forEach((item) => {
+      const details = resourceDetails[item.label] || {
+        title: item.label,
+        detail: rm.t("External link", "外部リンク"),
+        icon: "assets/icons/link.svg",
+      };
       const link = document.createElement("a");
       link.href = item.url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.textContent = item.label === "url" ? rm.t("Lab Profile", "研究室プロフィール") : item.label.toUpperCase();
+      link.className = "resource-card";
+      link.setAttribute("aria-label", `${details.title}: ${details.detail}`);
+      const icon = document.createElement("img");
+      icon.className = "resource-icon";
+      icon.src = details.icon;
+      icon.alt = "";
+      icon.width = 28;
+      icon.height = 28;
+      const text = document.createElement("span");
+      text.className = "resource-text";
+      const title = document.createElement("strong");
+      title.textContent = details.title;
+      const detail = document.createElement("small");
+      detail.textContent = details.detail;
+      text.append(title, detail);
+      link.append(icon, text);
       links.append(link);
     });
   } catch (error) {
