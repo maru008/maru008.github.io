@@ -295,6 +295,14 @@ html[lang="ja"] .achievement-list strong + .achievement-source::before {
   font-weight: bold;
 }
 
+.to-appear {
+  margin-left: 0.42rem;
+  color: #7a6855;
+  font-size: 0.72rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
 .load-error {
   padding: 0.8rem 1rem;
   border-radius: 6px;

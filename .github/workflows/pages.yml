@@ -26,6 +26,9 @@ jobs:
       - name: Validate editor and researchmap data
         run: python3 -m unittest discover -s tests -v
 
+      - name: Validate browser date handling
+        run: node --test tests/test_researchmap_js.mjs
+
       - name: Build public data
         run: python3 scripts/build_public_data.py
 

@@ -13,6 +13,9 @@
   document.querySelectorAll("[data-en][data-ja]").forEach((element) => {
     element.textContent = element.dataset[language];
   });
+  document.querySelectorAll("[data-current-year]").forEach((element) => {
+    element.textContent = String(new Date().getFullYear());
+  });
   document.querySelectorAll("[data-language]").forEach((button) => {
     const active = button.dataset.language === language;
     button.classList.toggle("active", active);
@@ -90,6 +93,15 @@
     return `${month} ${Number(parts[2])}, ${parts[0]}`;
   }
 
+  function isFutureDate(value, today = new Date()) {
+    if (!value || value === "9999") return false;
+    const match = String(value).match(/^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/);
+    if (!match) return false;
+    const dateNumber = Number(match[1]) * 10000 + Number(match[2] || 1) * 100 + Number(match[3] || 1);
+    const todayNumber = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    return dateNumber > todayNumber;
+  }
+
   function period(from, to) {
     const start = dateLabel(from);
     const end = dateLabel(to);
@@ -106,5 +118,5 @@
     });
   }
 
-  root.ResearchmapData = { byType, dateLabel, dataUrl, language, load, localized, localizedArray, period, sortNewest, t, visible };
+  root.ResearchmapData = { byType, dateLabel, dataUrl, isFutureDate, language, load, localized, localizedArray, period, sortNewest, t, visible };
 })(window);

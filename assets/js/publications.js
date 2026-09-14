@@ -47,6 +47,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     return container;
   }
 
+  function appendToAppear(item, date) {
+    if (!rm.isFutureDate(date)) return;
+    const marker = document.createElement("span");
+    marker.className = "to-appear";
+    marker.textContent = "(To appear)";
+    item.append(marker);
+  }
+
   function section(title, documents, renderer, qualifier = "") {
     if (!documents.length) return;
     const sectionElement = document.createElement("section");
@@ -89,6 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (merge.invited === true) badges.append(badge(rm.t("Invited", "招待あり"), "accent"));
     metadata.append(badges, links(merge));
     item.append(authors, title, source, metadata);
+    appendToAppear(item, merge.publication_date);
     return item;
   }
 
@@ -111,6 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (merge.invited === true) badges.append(badge(rm.t("Invited", "招待あり"), "accent"));
     item.append(presenters, title, source, badges, links(merge));
+    appendToAppear(item, merge.publication_date);
     return item;
   }
 
@@ -122,6 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     detail.className = "achievement-source";
     detail.textContent = [...detailFields.map((field) => rm.localized(merge[field])), rm.dateLabel(merge[dateField])].filter(Boolean).join(", ");
     item.append(title, detail, links(merge));
+    appendToAppear(item, merge[dateField]);
     return item;
   }
 
