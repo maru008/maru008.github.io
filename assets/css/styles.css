@@ -8,6 +8,7 @@ body {
 }
 
 header {
+  position: relative;
   background: #004080;
   color: #fff;
   padding: 1rem 0;
@@ -28,6 +29,39 @@ nav ul li a {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
+}
+
+.language-switcher {
+  position: absolute;
+  top: 0.7rem;
+  right: 1rem;
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.language-switcher button {
+  appearance: none;
+  padding: 0.24rem 0.62rem;
+  border: 0;
+  background: transparent;
+  color: #e6eff8;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.language-switcher button.active {
+  background: #fff;
+  color: #004080;
+  font-weight: bold;
+}
+
+.language-switcher button:focus-visible {
+  outline: 2px solid #ffd27a;
+  outline-offset: -2px;
 }
 
 main {
@@ -159,32 +193,37 @@ footer {
 }
 
 .achievement-authors + strong::before {
-  content: "：";
+  content: ": ";
   color: #778592;
   font-weight: normal;
 }
 
 .achievement-list strong + .achievement-source::before {
-  content: "、";
+  content: ", ";
   color: #778592;
 }
 
+html[lang="ja"] .achievement-authors + strong::before {
+  content: "：";
+}
+
+html[lang="ja"] .achievement-list strong + .achievement-source::before {
+  content: "、";
+}
+
 .achievement-metadata {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem 0.55rem;
-  margin-left: 0.4rem;
+  display: inline;
 }
 
 .badges,
 .achievement-links {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.32rem;
-  margin: 0 0 0 0.35rem;
+  display: inline;
+  margin: 0;
 }
 
 .badge {
+  display: inline-block;
+  margin-left: 0.35rem;
   padding: 0.03rem 0.38rem;
   border-radius: 999px;
   background: #edf1f4;
@@ -204,22 +243,14 @@ footer {
 }
 
 .achievement-list > li.major-achievement {
-  border-left-color: #b87520;
-  border-radius: 0;
-  background: linear-gradient(90deg, #fff8e9 0%, rgba(255, 248, 233, 0) 78%);
-}
-
-.achievement-list > li.major-achievement > strong {
-  color: #8a4f0c;
-}
-
-.badge.major {
-  border: 1px solid #e3bd7e;
-  background: #fff1d5;
-  color: #80500f;
+  border-left-color: #d8bd96;
+  background: linear-gradient(90deg, #fffbf5 0%, rgba(255, 251, 245, 0) 70%);
 }
 
 .achievement-links a {
+  display: inline-block;
+  margin-left: 0.42rem;
+  vertical-align: baseline;
   font-size: 0.72rem;
   font-weight: bold;
 }
@@ -259,6 +290,11 @@ footer {
 
   nav ul li {
     margin: 0 0.45rem;
+  }
+
+  .language-switcher {
+    position: static;
+    margin: 0 auto 0.35rem;
   }
 
   main {

@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Naoki Yoshimaru Profile</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260914-6">
 </head>
 <body>
 
 <header>
+  <div class="language-switcher" role="group" aria-label="Language">
+    <button type="button" data-language="en">English</button>
+    <button type="button" data-language="ja">日本語</button>
+  </div>
   <h1>Naoki Yoshimaru</h1>
   <nav>
     <ul>
@@ -20,28 +24,28 @@
 
 <main>
   <section>
-    <h2>所属</h2>
+    <h2 data-en="Affiliation" data-ja="所属">Affiliation</h2>
     <ul id="affiliation-list"></ul>
 
-    <h2>学歴</h2>
+    <h2 data-en="Education" data-ja="学歴">Education</h2>
     <ul id="education-list"></ul>
 
-    <h2>外部リンク</h2>
+    <h2 data-en="Links" data-ja="外部リンク">Links</h2>
     <div id="links-list" class="link-list"></div>
 
-    <h2>研究分野</h2>
+    <h2 data-en="Research Areas" data-ja="研究分野">Research Areas</h2>
     <ul id="research-area-list"></ul>
 
-    <h2>研究キーワード</h2>
+    <h2 data-en="Research Interests" data-ja="研究キーワード">Research Interests</h2>
     <ul id="research-interest-list"></ul>
 
-    <h2>経歴</h2>
+    <h2 data-en="Experience" data-ja="経歴">Experience</h2>
     <ul id="career-list"></ul>
 
-    <h2>所属学協会</h2>
+    <h2 data-en="Professional Memberships" data-ja="所属学協会">Professional Memberships</h2>
     <ul id="association-list"></ul>
 
-    <h2>委員歴</h2>
+    <h2 data-en="Committee Memberships" data-ja="委員歴">Committee Memberships</h2>
     <ul id="committee-list"></ul>
 
   </section>
@@ -51,8 +55,8 @@
   <p>&copy; 2025 Naoki Yoshimaru</p>
 </footer>
 
-<script src="assets/js/researchmap.js"></script>
-<script src="assets/js/profile.js"></script>
+<script src="assets/js/researchmap.js?v=20260914-6"></script>
+<script src="assets/js/profile.js?v=20260914-6"></script>
 
 </body>
 </html>

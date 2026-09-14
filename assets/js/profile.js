@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const rm = window.ResearchmapData;
+  document.title = rm.t("Naoki Yoshimaru — Profile", "Naoki Yoshimaru — プロフィール");
 
   function appendList(id, items) {
     const list = document.getElementById(id);
@@ -23,16 +24,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       .map((item) => joinLocalizedParts(item, ["affiliation", "section", "job"])));
 
     appendList("education-list", rm.sortNewest(rm.byType(documents, "education"), ["from_date"]).map(({ merge }) =>
-      `${rm.period(merge.from_date, merge.to_date)}：${joinLocalizedParts(merge, ["affiliation", "department", "course"])}`));
+      `${rm.period(merge.from_date, merge.to_date)}${rm.t(": ", "：")}${joinLocalizedParts(merge, ["affiliation", "department", "course"])}`));
     appendList("research-area-list", rm.byType(documents, "research_areas").map(({ merge }) =>
       [rm.localized(merge.research_field), rm.localized(merge.discipline), merge.item_number].filter(Boolean).join(" / ")));
     appendList("research-interest-list", rm.byType(documents, "research_interests").map(({ merge }) => rm.localized(merge.keyword)));
     appendList("career-list", rm.sortNewest(rm.byType(documents, "research_experience"), ["from_date"]).map(({ merge }) =>
-      `${rm.period(merge.from_date, merge.to_date)}：${joinLocalizedParts(merge, ["affiliation", "section", "job"])}`));
+      `${rm.period(merge.from_date, merge.to_date)}${rm.t(": ", "：")}${joinLocalizedParts(merge, ["affiliation", "section", "job"])}`));
     appendList("association-list", rm.sortNewest(rm.byType(documents, "association_memberships"), ["from_date"]).map(({ merge }) =>
-      `${rm.period(merge.from_date, merge.to_date)}：${rm.localized(merge.academic_society_name)}`));
+      `${rm.period(merge.from_date, merge.to_date)}${rm.t(": ", "：")}${rm.localized(merge.academic_society_name)}`));
     appendList("committee-list", rm.sortNewest(rm.byType(documents, "committee_memberships"), ["from_date"]).map(({ merge }) =>
-      `${rm.period(merge.from_date, merge.to_date)}：${[rm.localized(merge.association), rm.localized(merge.committee_name)].filter(Boolean).join(" ")}`));
+      `${rm.period(merge.from_date, merge.to_date)}${rm.t(": ", "：")}${[rm.localized(merge.association), rm.localized(merge.committee_name)].filter(Boolean).join(" ")}`));
 
     const links = document.getElementById("links-list");
     links.replaceChildren();
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       link.href = item.url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.textContent = item.label === "url" ? "研究室プロフィール" : item.label.toUpperCase();
+      link.textContent = item.label === "url" ? rm.t("Lab Profile", "研究室プロフィール") : item.label.toUpperCase();
       links.append(link);
     });
   } catch (error) {

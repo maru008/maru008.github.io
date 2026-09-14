@@ -2,12 +2,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const rm = window.ResearchmapData;
   const root = document.getElementById("publication-list");
   const presentationTypeLabels = {
-    oral_presentation: "口頭発表",
-    poster_presentation: "ポスター発表",
-    invited_oral_presentation: "招待講演",
-    nominated_symposium: "指名シンポジウム",
-    public_symposium: "公開シンポジウム",
+    oral_presentation: ["Oral presentation", "口頭発表"],
+    poster_presentation: ["Poster presentation", "ポスター発表"],
+    invited_oral_presentation: ["Invited talk", "招待講演"],
+    nominated_symposium: ["Nominated symposium", "指名シンポジウム"],
+    public_symposium: ["Public symposium", "公開シンポジウム"],
   };
+  document.title = rm.t("Publications — Naoki Yoshimaru", "研究業績 — Naoki Yoshimaru");
 
   function isMyName(name) {
     const normalized = name.trim().replace(/\s+/g, " ");
@@ -85,8 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     metadata.className = "achievement-metadata";
     const badges = document.createElement("div");
     badges.className = "badges";
-    if (merge.invited === true) badges.append(badge("招待あり", "accent"));
-    if (merge.major_achievement === true) badges.append(badge("主要論文", "major"));
+    if (merge.invited === true) badges.append(badge(rm.t("Invited", "招待あり"), "accent"));
     metadata.append(badges, links(merge));
     item.append(authors, title, source, metadata);
     return item;
@@ -105,9 +105,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     source.textContent = [rm.localized(merge.event), rm.dateLabel(merge.publication_date)].filter(Boolean).join(", ");
     const badges = document.createElement("div");
     badges.className = "badges";
-    if (merge.presentation_type) badges.append(badge(presentationTypeLabels[merge.presentation_type] || merge.presentation_type));
-    if (merge.invited === true) badges.append(badge("招待あり", "accent"));
-    if (merge.major_achievement === true) badges.append(badge("主要業績", "major"));
+    if (merge.presentation_type) {
+      const labels = presentationTypeLabels[merge.presentation_type];
+      badges.append(badge(labels ? rm.t(labels[0], labels[1]) : merge.presentation_type));
+    }
+    if (merge.invited === true) badges.append(badge(rm.t("Invited", "招待あり"), "accent"));
     item.append(presenters, title, source, badges, links(merge));
     return item;
   }
@@ -136,19 +138,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].includes(item.merge.published_paper_type));
     const thesesAndOther = papers.filter((item) => ["master_thesis", "doctoral_thesis"].includes(item.merge.published_paper_type));
 
-    section("国際雑誌論文", internationalJournals.filter((item) => item.merge.referee === true), paperItem, "査読あり");
-    section("国際雑誌論文", internationalJournals.filter((item) => item.merge.referee !== true), paperItem, "査読なし");
-    section("国内雑誌論文", domesticJournals.filter((item) => item.merge.referee === true), paperItem, "査読あり");
-    section("国内雑誌論文", domesticJournals.filter((item) => item.merge.referee !== true), paperItem, "査読なし");
-    section("国際会議論文", internationalConferences.filter((item) => item.merge.referee === true), paperItem, "査読あり");
-    section("国際会議論文", internationalConferences.filter((item) => item.merge.referee !== true), paperItem, "査読なし");
-    section("国内会議論文", domesticConferences.filter((item) => item.merge.referee === true), paperItem, "査読あり");
-    section("国内会議論文", domesticConferences.filter((item) => item.merge.referee !== true), paperItem, "査読なし");
-    section("学位論文・その他", thesesAndOther, paperItem);
-    section("講演・口頭発表", rm.sortNewest(rm.byType(documents, "presentations")), presentationItem);
-    section("受賞", rm.sortNewest(rm.byType(documents, "awards")), (document) => simpleItem(document, "award_name", ["award_title", "association"], "award_date"));
+    const reviewed = rm.t("peer-reviewed", "査読あり");
+    const notReviewed = rm.t("not peer-reviewed", "査読なし");
+    section(rm.t("International Journal Articles", "国際雑誌論文"), internationalJournals.filter((item) => item.merge.referee === true), paperItem, reviewed);
+    section(rm.t("International Journal Articles", "国際雑誌論文"), internationalJournals.filter((item) => item.merge.referee !== true), paperItem, notReviewed);
+    section(rm.t("Domestic Journal Articles", "国内雑誌論文"), domesticJournals.filter((item) => item.merge.referee === true), paperItem, reviewed);
+    section(rm.t("Domestic Journal Articles", "国内雑誌論文"), domesticJournals.filter((item) => item.merge.referee !== true), paperItem, notReviewed);
+    section(rm.t("International Conference Papers", "国際会議論文"), internationalConferences.filter((item) => item.merge.referee === true), paperItem, reviewed);
+    section(rm.t("International Conference Papers", "国際会議論文"), internationalConferences.filter((item) => item.merge.referee !== true), paperItem, notReviewed);
+    section(rm.t("Domestic Conference Papers", "国内会議論文"), domesticConferences.filter((item) => item.merge.referee === true), paperItem, reviewed);
+    section(rm.t("Domestic Conference Papers", "国内会議論文"), domesticConferences.filter((item) => item.merge.referee !== true), paperItem, notReviewed);
+    section(rm.t("Thesis and Other Papers", "学位論文・その他"), thesesAndOther, paperItem);
+    section(rm.t("Presentations and Talks", "講演・口頭発表"), rm.sortNewest(rm.byType(documents, "presentations")), presentationItem);
+    section(rm.t("Awards", "受賞"), rm.sortNewest(rm.byType(documents, "awards")), (document) => simpleItem(document, "award_name", ["award_title", "association"], "award_date"));
     section("Works", rm.sortNewest(rm.byType(documents, "works")), (document) => simpleItem(document, "work_title", ["location"], "publication_date"));
-    section("社会貢献活動", rm.sortNewest(rm.byType(documents, "academic_contribution"), ["from_event_date"]),
+    section(rm.t("Academic and Social Contributions", "社会貢献活動"), rm.sortNewest(rm.byType(documents, "academic_contribution"), ["from_event_date"]),
       (document) => simpleItem(document, "academic_contribution_title", ["promoter", "location"], "from_event_date"));
   } catch (error) {
     root.replaceChildren();
