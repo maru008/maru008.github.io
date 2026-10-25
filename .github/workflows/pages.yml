@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Validate editor and researchmap data
+      - name: Validate researchmap data
         run: python3 -m unittest discover -s tests -v
 
       - name: Validate browser date handling
